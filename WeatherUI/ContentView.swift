@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var isNight = false
+    
     var body: some View {
         ZStack {
-            BackgroundView(topColor: .blue, bottomColor: Color("lightBlue"))
+            BackgroundView(isNight: $isNight)
             VStack {
                 CityNameView(cityName: "Amsterdam, NL")
-                CurrentWeatherView(imageName: "cloud.sun.fill", currentTemp: 16)
+                CurrentWeatherView(imageName: isNight ? "moon.stars.fill" : "cloud.sun.fill",
+                                   currentTemp: isNight ? 4 : 16)
+                
                 Spacer()
+                
                 HStack(spacing: 28) {
                     WeatherDayView(dayOfWeek: "TUE",
                                    imageName: "sun.max.fill",
@@ -32,15 +38,17 @@ struct ContentView: View {
                                    imageName: "wind",
                                    temperature: 8)
                 }.padding(.bottom, 20).padding(.top, 160)
+                
                 Spacer()
+                
                 Button {
-                    // To do: change day time
-                    print("tapped")
+                    isNight.toggle()
                 } label: {
-                    DefaultButton(buttonText: "Change day time",
+                    DefaultButton(buttonText: isNight ? "Change to day time" : "Change to night",
                                   textColor: .blue,
                                   backgroundColor: .white)
                 }
+                
                 Spacer()
             }
         }
@@ -76,11 +84,10 @@ struct WeatherDayView: View {
 }
 
 struct BackgroundView: View {
-    var topColor: Color
-    var bottomColor: Color
+    @Binding var isNight: Bool
     
     var body: some View {
-        LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]),
+        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : Color("lightBlue")]),
                        startPoint: .topLeading,
                        endPoint: .bottomTrailing)
             .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
