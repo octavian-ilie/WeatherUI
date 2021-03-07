@@ -10,29 +10,11 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [Color.blue, Color("lightBlue")]),
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-            
+            BackgroundView(topColor: .blue, bottomColor: Color("lightBlue"))
             VStack {
-                Text("Amsterdam, NL")
-                    .font(.system(size: 32, weight: .medium))
-                    .foregroundColor(.white)
-                    .padding()
-                VStack(spacing: 18) {
-                    Image(systemName: "cloud.sun.fill")
-                        .renderingMode(.original)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 180, height: 180, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    Text("16°")
-                        .font(.system(size: 70, weight: .medium))
-                        .foregroundColor(.white)
-                }
-                
+                CityNameView(cityName: "Amsterdam, NL")
+                CurrentWeatherView(imageName: "cloud.sun.fill", currentTemp: 16)
                 Spacer()
-                
                 HStack(spacing: 28) {
                     WeatherDayView(dayOfWeek: "TUE",
                                    imageName: "sun.max.fill",
@@ -50,19 +32,15 @@ struct ContentView: View {
                                    imageName: "wind",
                                    temperature: 8)
                 }.padding(.bottom, 20).padding(.top, 160)
-                
                 Spacer()
-                
                 Button {
+                    // To do: change day time
                     print("tapped")
                 } label: {
-                    Text("Change day time")
-                        .frame(width: 280, height: 50, alignment: .center)
-                        .background(Color.white)
-                        .font(.system(size: 20, weight: .bold, design: .default))
-                        .cornerRadius(10)
+                    DefaultButton(buttonText: "Change day time",
+                                  textColor: .blue,
+                                  backgroundColor: .white)
                 }
-                
                 Spacer()
             }
         }
@@ -92,6 +70,47 @@ struct WeatherDayView: View {
                 .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             Text("\(temperature)°")
                 .font(.system(size: 28, weight: .medium, design: .default))
+                .foregroundColor(.white)
+        }
+    }
+}
+
+struct BackgroundView: View {
+    var topColor: Color
+    var bottomColor: Color
+    
+    var body: some View {
+        LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]),
+                       startPoint: .topLeading,
+                       endPoint: .bottomTrailing)
+            .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+    }
+}
+
+struct CityNameView: View {
+    var cityName: String
+
+    var body: some View {
+        Text(cityName)
+            .font(.system(size: 32, weight: .medium))
+            .foregroundColor(.white)
+            .padding()
+    }
+}
+
+struct CurrentWeatherView: View {
+    var imageName: String
+    var currentTemp: Int
+        
+    var body: some View {
+        VStack(spacing: 18) {
+            Image(systemName: imageName)
+                .renderingMode(.original)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 180, height: 180, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            Text("\(currentTemp)°")
+                .font(.system(size: 70, weight: .medium))
                 .foregroundColor(.white)
         }
     }
